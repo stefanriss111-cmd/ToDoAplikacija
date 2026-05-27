@@ -1,16 +1,16 @@
 <template>
 
   <div
-    :class="darkMode
-      ? 'bg-dark text-light'
-      : 'bg-light text-dark'"
     class="min-vh-100"
+    :class="darkMode
+      ? 'bg-black text-light'
+      : 'bg-light text-dark'"
   >
 
     <nav
-      class="navbar navbar-expand-lg border-bottom mb-4"
+      class="navbar navbar-expand-lg border-bottom"
       :class="darkMode
-        ? 'navbar-dark bg-secondary border-secondary'
+        ? 'navbar-dark bg-dark border-secondary'
         : 'navbar-light bg-white border-light'"
     >
 
@@ -20,7 +20,7 @@
           Task Manager
         </span>
 
-        <div class="navbar-nav ms-auto">
+        <div class="navbar-nav ms-auto align-items-center">
 
           <router-link
             to="/"
@@ -40,7 +40,7 @@
             class="btn btn-sm btn-outline-info ms-3"
             @click="toggleDarkMode"
           >
-            {{ darkMode ? 'Light' : 'Dark' }}
+            {{ darkMode ? 'Light Mode' : 'Dark Mode' }}
           </button>
 
         </div>
@@ -49,11 +49,7 @@
 
     </nav>
 
-    <div class="container">
-
-      <router-view />
-
-    </div>
+    <router-view />
 
   </div>
 
@@ -62,11 +58,6 @@
 <script>
 
 export default {
-  mounted() {
-
-  this.$root.darkMode = this.darkMode
-
-},
 
   data() {
 
@@ -78,12 +69,20 @@ export default {
 
   },
 
+  provide() {
+
+    return {
+
+      darkMode: this,
+    }
+
+  },
+
   methods: {
 
     toggleDarkMode() {
 
       this.darkMode = !this.darkMode
-      this.$root.darkMode = this.darkMode
 
     }
 
