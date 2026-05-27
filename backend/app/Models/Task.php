@@ -6,5 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    //
+
+    protected $fillable = [
+
+        'title',
+        'category',
+        'is_completed',
+        'due_date'
+
+    ];
+
 }
