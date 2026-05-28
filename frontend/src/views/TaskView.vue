@@ -1,6 +1,9 @@
 <template>
 
-  <div class="container py-5">
+  <div
+  v-if="user"
+  class="container py-5"
+>
 
     <div
       class="card shadow-lg border-0"
@@ -13,12 +16,23 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
 
-          <h2 class="text-info">
-            Task Manager
-          </h2>
+          <div>
+
+            <h2 class="text-info mb-1">
+              Dobrodošao,
+              {{ user.name }}
+            </h2>
+
+            <small class="text-secondary">
+              {{ user.email }}
+            </small>
+
+          </div>
 
           <span class="badge bg-info text-dark fs-6">
+
             {{ filteredTasks.length }} Tasks
+
           </span>
 
         </div>
@@ -26,17 +40,28 @@
         <div class="d-flex gap-3 mb-4">
 
           <span class="badge bg-info">
-            Total: {{ tasks.length }}
+
+            Total:
+            {{ tasks.length }}
+
           </span>
 
           <span class="badge bg-success">
+
             Completed:
-            {{ tasks.filter(t => t.is_completed).length }}
+            {{ tasks.filter(
+              t => t.is_completed
+            ).length }}
+
           </span>
 
           <span class="badge bg-warning text-dark">
+
             Active:
-            {{ tasks.filter(t => !t.is_completed).length }}
+            {{ tasks.filter(
+              t => !t.is_completed
+            ).length }}
+
           </span>
 
         </div>
@@ -156,6 +181,7 @@
                   v-model="task.title"
                   class="form-control border-0"
                   :class="[
+
                     darkMode.darkMode
                       ? 'bg-dark text-light'
                       : 'bg-white text-dark',
@@ -163,6 +189,7 @@
                     task.is_completed
                       ? 'text-decoration-line-through opacity-75'
                       : ''
+
                   ]"
                 />
 
@@ -171,14 +198,18 @@
               <div class="d-flex gap-2">
 
                 <span class="badge bg-info">
+
                   {{ task.category }}
+
                 </span>
 
                 <span
                   v-if="task.due_date"
                   class="badge bg-warning text-dark"
                 >
+
                   {{ task.due_date }}
+
                 </span>
 
               </div>
@@ -233,6 +264,11 @@ export default {
       newDate: '',
       filter: 'all',
       search: '',
+
+      user: JSON.parse(
+        localStorage.getItem('user')
+      ),
+
       api: 'http://localhost:8000/tasks'
 
     }
@@ -275,7 +311,9 @@ export default {
 
           task.title
             .toLowerCase()
-            .includes(this.search.toLowerCase())
+            .includes(
+              this.search.toLowerCase()
+            )
 
         )
 
@@ -291,7 +329,11 @@ export default {
 
     async getTasks() {
 
-      const response = await axios.get(this.api)
+      const response = await axios.get(
+
+        `${this.api}?user_id=${this.user.id}`
+
+      )
 
       this.tasks = response.data
 
@@ -303,6 +345,7 @@ export default {
 
       await axios.post(this.api, {
 
+        user_id: this.user.id,
         title: this.newTask,
         category: this.newCategory,
         due_date: this.newDate
@@ -323,8 +366,10 @@ export default {
         `http://localhost:8000/tasks/update/${task.id}`,
 
         {
+
           title: task.title,
           is_completed: task.is_completed
+
         }
 
       )
@@ -356,6 +401,14 @@ export default {
   },
 
   mounted() {
+
+    if (!this.user) {
+
+      this.$router.push('/login')
+
+      return
+
+    }
 
     this.getTasks()
 

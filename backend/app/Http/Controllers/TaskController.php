@@ -8,28 +8,32 @@ use App\Models\Task;
 class TaskController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
 
-        return Task::all();
+        return Task::where(
+            'user_id',
+            $request->user_id
+        )->get();
 
     }
 
     public function store(Request $request)
-    {
+{
 
-        $task = Task::create([
+    $task = Task::create([
 
-            'title' => $request->title,
-            'category' => $request->category,
-            'due_date' => $request->due_date,
-            'is_completed' => false
+        'user_id' => $request->user_id,
+        'title' => $request->title,
+        'category' => $request->category,
+        'due_date' => $request->due_date,
+        'is_completed' => false
 
-        ]);
+    ]);
 
-        return response()->json($task);
+    return response()->json($task);
 
-    }
+}
 
     public function update(Request $request, $id)
     {
@@ -45,14 +49,12 @@ class TaskController extends Controller
         }
 
         $task->title = $request->title;
-
         $task->is_completed = $request->is_completed;
 
         $task->save();
 
         return response()->json([
-            'message' => 'Updated',
-            'task' => $task
+            'message' => 'Updated'
         ]);
 
     }

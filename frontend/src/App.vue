@@ -36,11 +36,25 @@
             Prijava
           </router-link>
 
+          <router-link
+            to="/register"
+            class="nav-link"
+          >
+            Registracija
+          </router-link>
+
           <button
             class="btn btn-sm btn-outline-info ms-3"
             @click="toggleDarkMode"
           >
             {{ darkMode ? 'Light Mode' : 'Dark Mode' }}
+          </button>
+
+          <button
+            class="btn btn-danger btn-sm ms-2"
+            @click="logout"
+          >
+            Logout
           </button>
 
         </div>
@@ -73,7 +87,8 @@ export default {
 
     return {
 
-      darkMode: this,
+      darkMode: this
+
     }
 
   },
@@ -83,6 +98,14 @@ export default {
     toggleDarkMode() {
 
       this.darkMode = !this.darkMode
+
+    },
+
+    logout() {
+
+      localStorage.removeItem('user')
+
+      this.$router.push('/login')
 
     }
 

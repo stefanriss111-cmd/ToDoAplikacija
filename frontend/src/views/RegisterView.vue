@@ -4,45 +4,41 @@
 
 <div class="col-md-4">
 
-<div class="card bg-dark text-light border-0 shadow">
+<div class="card bg-dark text-light shadow border-0">
 
 <div class="card-body p-4">
 
-<h3 class="text-center mb-4 text-info">
-Prijava
+<h3 class="text-info text-center mb-4">
+Registracija
 </h3>
 
-<form @submit.prevent="handleLogin">
+<form @submit.prevent="register">
 
 <input
-type="email"
+v-model="name"
+class="form-control mb-3 bg-secondary text-light border-0"
+placeholder="Ime"
+/>
+
+<input
 v-model="email"
+type="email"
 class="form-control mb-3 bg-secondary text-light border-0"
 placeholder="Email"
 />
 
 <input
-type="password"
 v-model="password"
+type="password"
 class="form-control mb-3 bg-secondary text-light border-0"
 placeholder="Lozinka"
 />
 
-<button
-type="submit"
-class="btn btn-info w-100"
->
-Prijavi se
+<button class="btn btn-info w-100">
+Registruj se
 </button>
 
 </form>
-
-<p
-v-if="error"
-class="text-danger mt-3"
->
-{{ error }}
-</p>
 
 </div>
 
@@ -64,9 +60,9 @@ data() {
 
 return {
 
+name: '',
 email: '',
-password: '',
-error: null
+password: ''
 
 }
 
@@ -74,16 +70,15 @@ error: null
 
 methods: {
 
-async handleLogin() {
+async register() {
 
-try {
+await axios.post(
 
-const response = await axios.post(
-
-'http://localhost:8000/api/login',
+'http://localhost:8000/api/register',
 
 {
 
+name: this.name,
 email: this.email,
 password: this.password
 
@@ -91,18 +86,7 @@ password: this.password
 
 )
 
-localStorage.setItem(
-'user',
-JSON.stringify(response.data.user)
-)
-
-this.$router.push('/')
-
-} catch {
-
-this.error = 'Pogresan login'
-
-}
+this.$router.push('/login')
 
 }
 
